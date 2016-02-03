@@ -1,0 +1,137 @@
+&ACCESS RVP
+&REL 104
+&PARAM TEMPLATE = C:\KRC\Roboter\Template\vorgabe
+&PARAM EDITMASK = *
+DEF WW_PI( )
+
+INT I
+
+;FOLD INI
+  ;FOLD BASISTECH INI
+    GLOBAL INTERRUPT DECL 3 WHEN $STOPMESS==TRUE DO IR_STOPM ( )
+    INTERRUPT ON 3 
+    BAS (#INITMOV,0 )
+  ;ENDFOLD (BASISTECH INI)
+  ;FOLD USER INI
+    ;Make your modifications here
+
+  ;ENDFOLD (USER INI)
+;ENDFOLD (INI)
+
+;Wylaczenie tasmociagu
+WL_TASMOCIAG(FALSE)
+
+;Zerowanie wszystkich punktow i TIMERow
+FOR I = 1 TO 10
+  PUNKT_REF[I] = PUNKT_ZERO
+  $TIMER[I] = 0
+  $TIMER_STOP[I] = TRUE
+ENDFOR
+
+;Skala potrzebna to odzwierciedlenia odczytow systemu wizyjneg w rzeczywistosci
+SKALA=ROZDZ_MM_Y/ROZDZ_PIX_Y
+;Inicjalizacja systemu wizyjnego
+WIZJA_INI()
+
+;Ruch do punktu poczatkowego
+PTP PUNKT_DOM
+USTAL_BAZE()
+PTP PUNKT_POCZ
+
+;Wlaczenie tasmociagu
+WL_TASMOCIAG(TRUE)
+
+;Obsluga przerwania z czujnika
+;Pomiar polozenia obiektu przez system wizyjny
+INTERRUPT DECL 1 WHEN $IN[1] == TRUE DO WIZJA_POMIAR()
+INTERRUPT DECL 2 WHEN $TIMER[1] >= CZAS_RUCHU_OBIEKTU DO WL_TASMOCIAG_TIMER(FALSE)
+INTERRUPT ON 1
+
+LOOP
+  ;Jezeli nie wykryto do tej pory zadnego obiektu
+  IF PUNKT_REF[1].X == 0 THEN
+    WL_TASMOCIAG(TRUE)
+  ;Jezeli wykryto co najmniej jeden obiekt
+  ELSE
+    ;Jezeli pierwszy obiekt nie jest wystarczajaco blisko robota
+    IF $TIMER[1] < CZAS_RUCHU_OBIEKTU THEN
+      WL_TASMOCIAG(TRUE)
+      WL_TIMER(TRUE)
+    ;Jezeli pierwszy obiekt jest wystarczajaco blisko robota
+    ELSE
+      ;Wylaczenie tasmociagu i zatrzymanie timerow dla wszystkich obiektow
+      WL_TASMOCIAG(FALSE)
+      WL_TIMER(FALSE)
+      
+      PTP PUNKT_REF[1]
+      OTW_CHWYTAK()
+      USTAL_BAZE()
+      $ORI_TYPE=#CONSTANT
+      ;Obnizenie po przedmiot do pobrania
+      PUNKT_REL_Z.Z = -WYS_POBIERZ-WYS_WYJSCIOWA
+      WAIT SEC 0
+      LIN_REL PUNKT_REL_Z
+      WAIT SEC 0.5
+      ZAMKN_CHWYTAK()
+      USTAL_BAZE()
+      ;Podjazd wyzej niz punkt poczatkowy, aby nie zawadzic o kolejny obiekt
+      PUNKT_REL_Z.Z = WYS_POBIERZ+WYS_WYJSCIOWA-60
+      WAIT SEC 0
+      LIN_REL PUNKT_REL_Z
+      WAIT SEC 0.5
+      
+      ;Przesuwanie indeksow kolejki
+      FOR I = 1 TO 9
+        $TIMER[I] = $TIMER[I+1]
+        PUNKT_REF[I] = PUNKT_REF[I+1]
+      ENDFOR
+      
+      WAIT SEC 0
+      ;Jezeli jest kolejny obiekt, moze podjechac do miejsca pobrania przez robota
+      IF ((PUNKT_REF[1].X <> 0) AND ($TIMER[1] < CZAS_RUCHU_OBIEKTU)) THEN
+        WL_TASMOCIAG(TRUE)
+        WL_TIMER(TRUE)
+        ;Jednoczesnie aktywowanie przerwania odpowiedzialnego  za ewentualne zatrzymanie tasmociagu
+        INTERRUPT ON 2
+      ENDIF
+      
+      IF PUNKT_REF[1].X == 0 THEN
+        WL_TASMOCIAG(TRUE)
+        INTERRUPT ON 2
+      ENDIF
+      
+      USTAL_BAZE()
+      PTP PUNKT_ODLOZ
+      USTAL_BAZE()
+      ;Obnizenie w celu odlozenia przedmiotu
+      PUNKT_REL_Z.Z = -WYS_ODLOZ-PUNKT_ODLOZ.Z
+      WAIT SEC 0
+      LIN_REL PUNKT_REL_Z
+      WAIT SEC 0.5
+      OTW_CHWYTAK()
+      USTAL_BAZE()
+      ;Podniesienie koncowki bez przedmiotu
+      PUNKT_REL_Z.Z = WYS_ODLOZ+PUNKT_ODLOZ.Z
+      WAIT SEC 0
+      LIN_REL PUNKT_REL_Z
+      USTAL_BAZE()
+      PTP PUNKT_POCZ
+      
+      WAIT SEC 0
+      INTERRUPT OFF 2
+    ENDIF
+  ENDIF
+ENDLOOP
+
+;Wylaczenie tasmociagu
+WL_TASMOCIAG(FALSE)
+
+END
+
+DEF USTAL_BAZE()
+;Podporgram do ustalania aktualnej bazy i narzedzia
+
+$BASE = BASE_DATA[5]
+$TOOL = TOOL_DATA[2]
+
+END

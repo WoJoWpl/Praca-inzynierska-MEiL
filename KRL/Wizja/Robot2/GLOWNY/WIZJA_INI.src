@@ -1,0 +1,18 @@
+&ACCESS RVO1
+&COMMENT 
+DEF WIZJA_INI ( )
+;Program do inicjalizacji systemu wizyjnego
+
+BOOL CZYSC
+CZYSC=STRCLEAR(POLECENIE[])
+
+;Wejscie do trybu RUN (mozliwosc pomiaru)
+POLECENIE[]="R0"
+PRZYGOTUJ()
+OTWORZ()
+WYSLIJ()
+WAIT FOR $DATA_SER3<>0
+ODBIERZ()
+ZAMKNIJ()
+
+END

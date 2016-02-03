@@ -1,0 +1,63 @@
+&ACCESS RVO1
+&COMMENT 
+DEF TASMOCIAG_KROKOWO ( KIERUNEK :IN, PREDKOSC :IN)
+
+;Funkcja zwraca predkosc w mm/s
+
+;Zmienna moze przyjac 3 wartosci
+;-1 - jazda do tylu
+;0 - zatrzymanie tasmociagu
+;1 - jazda do przodu
+INT KIERUNEK
+
+;Zmienna moze przyjac 3 wartosci
+;0 - czest. bazowa: 15Hz
+;1 - czest. pierwsza: 30Hz
+;2 - czest. druga: 40Hz
+;3 - czest. trzecia: 50Hz
+INT PREDKOSC
+
+;Tymaczasowa zmienna przetrzymujaca wybrana czestotliwosc
+REAL FRQ_TEMP
+
+;Jezeli nie zazadano zatrzymania tasmy
+IF KIERUNEK <> 0 THEN
+  IF KIERUNEK == -1 THEN
+    ;Jazda do tylu
+    $OUT[1] = FALSE
+    $OUT[2] = TRUE
+  ELSE
+    ;Jazda do przodu
+    $OUT[1] = TRUE
+    $OUT[2] = FALSE
+  ENDIF
+  ;Ustawienie zadanej predkosci tasmy
+  SWITCH PREDKOSC
+  CASE 0
+    ;Jazda z min. predkoscia
+    $OUT[3] = FALSE
+    $OUT[4] = FALSE
+    FRQ_TEMP = JOG
+  CASE 1
+    $OUT[3] = TRUE
+    $OUT[4] = FALSE
+    FRQ_TEMP = ST1
+  CASE 2
+    $OUT[3] = FALSE
+    $OUT[4] = TRUE
+    FRQ_TEMP = ST2
+  CASE 3
+    $OUT[3] = TRUE
+    $OUT[4] = TRUE
+    FRQ_TEMP = ST3
+  ENDSWITCH
+  PREDKOSC_TASMY = 2*PI*RPM_MAX*FRQ_TEMP*SREDNICA/(2*60*FRQ_MAX*PRZELOZENIE)
+  CZAS_RUCHU_OBIEKTU = 1000*DROGA_OBIEKTU/PREDKOSC_TASMY
+ELSE
+  $OUT[1] = FALSE
+  $OUT[2] = FALSE
+  $OUT[3] = FALSE
+  $OUT[4] = FALSE
+ENDIF
+
+END

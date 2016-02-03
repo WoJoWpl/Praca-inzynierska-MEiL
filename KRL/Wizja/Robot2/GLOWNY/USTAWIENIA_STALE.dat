@@ -1,0 +1,73 @@
+&ACCESS RVO
+&REL 38
+&PARAM TEMPLATE = C:\KRC\Roboter\Template\vorgabe
+&PARAM EDITMASK = *
+DEFDAT USTAWIENIA_STALE PUBLIC
+;FOLD EXTERNAL DECLARATIONS;%{PE}%MKUKATPBASIS,%CEXT,%VCOMMON,%P
+;FOLD BASISTECH EXT;%{PE}%MKUKATPBASIS,%CEXT,%VEXT,%P
+EXT  BAS (BAS_COMMAND  :IN,REAL  :IN )
+DECL INT SUCCESS
+;ENDFOLD (BASISTECH EXT)
+;FOLD USER EXT;%{E}%MKUKATPUSER,%CEXT,%VEXT,%P
+;Make here your modifications
+
+;ENDFOLD (USER EXT)
+;ENDFOLD (EXTERNAL DECLARATIONS)
+
+;Wymagane zmienne do ustawien polaczenia szeregowego
+DECL GLOBAL INT HANDLE,OFFSET
+DECL GLOBAL STATE_T TX_STATE,RX_STATE,CLOSE_STATE,S_STATE
+DECL GLOBAL MODUS_T RX_MODE,TX_MODE
+DECL GLOBAL REAL TIMEOUT
+
+;Lancuchy odbierane/wysylane przez pol. szeregowe
+DECL GLOBAL CHAR POLECENIE[10]
+DECL GLOBAL CHAR REZULTAT[100]
+DECL GLOBAL CHAR WYJSCIE[10]
+DECL GLOBAL CHAR PREFIX[10]
+DECL GLOBAL INT CR=13
+
+;Dane otrzymane z systemu wizyjnego
+DECL GLOBAL REAL X_ODCZYT
+DECL GLOBAL REAL Y_ODCZYT
+DECL GLOBAL REAL KAT_ODCZYT
+DECL GLOBAL INT WYNIK
+DECL GLOBAL CHAR COMMA
+
+;Dane o polozeniu obiektu
+;Punkt tymczasowy wpisywany pozniej do ponizszej tablicy
+DECL GLOBAL FRAME PUNKT_ZAPISZ
+;Tablica punktow dla kolejnych rozpoznanych obiektow
+DECL GLOBAL FRAME PUNKT_REF[10]
+DECL GLOBAL REAL SKALA
+
+;Zmienne mechaniczne
+;Srednica "walka" tasmociagu w mm (odl. miedzy gorna i dolna tasma)
+DECL GLOBAL REAL SREDNICA = 38
+;Nominalna predkosc obrotowa walu silnika RPM_MAX (obr/min)
+;przy zasilaniu FRQ_MAX (Hz)
+DECL GLOBAL REAL RPM_MAX = 1310
+DECL GLOBAL REAL FRQ_MAX = 50
+;Przelozenie przekladni
+DECL GLOBAL REAL PRZELOZENIE = 15
+
+;Punkt dla pierwszego ruchu BCO
+DECL GLOBAL E6AXIS PUNKT_DOM = {A1 -120.0,A2 120.0, A3 -45.0, A4 0.0, A5 90.0,A6 0.0,E1 0.0,E2 0.0, E3 0.0,E4 0.0,E5 0.0,E6 0.0}
+;Punkt "zerowy" - wzor do wpisania odczytanego polozenia obiektu
+DECL GLOBAL FRAME PUNKT_ZERO = {X 0.0,Y 0.0,Z 0.0,A 90.0,B 0.0,C 0.0}
+;Tymczasowa skladowa Z do ruchu LIN w glownym programie
+DECL GLOBAL FRAME PUNKT_REL_Z = {X 0.0,Y 0.0,Z 0.0,A 90.0,B 0.0,C 0.0}
+
+;Zmienne mechaniczne
+;Odczytywana predkosc tasmy
+DECL GLOBAL REAL PREDKOSC_TASMY
+;Obliczany czas ruchu obiektu do zadanej pozycji
+DECL GLOBAL REAL CZAS_RUCHU_OBIEKTU
+
+;Pozostale zmienne/stale
+;Nie ma obslugi radianow w robocie
+DECL GLOBAL REAL PI = 3.1416
+
+
+
+ENDDAT

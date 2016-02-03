@@ -1,0 +1,43 @@
+&ACCESS RVO1
+&COMMENT 
+DEFDAT USTAWIENIA_ZMIENNE PUBLIC
+
+;Definiowana odleglosc do przebycia przez obiekt
+DECL GLOBAL REAL DROGA_OBIEKTU = 800
+
+;Ustawienia falownika (musza byc zgodne z ust. na panelu falownika)
+DECL GLOBAL REAL JOG = 15
+DECL GLOBAL REAL ST1 = 30
+DECL GLOBAL REAL ST2 = 40
+DECL GLOBAL REAL ST3 = 50
+
+;Ustawienia dot. systemu wizyjnego
+;Odleglosc osi X ukladu wspolrzednych ("bazy wizyjnej") od osi X systemu wizyjnego
+;(gorna krawedz obrazu widzianego przez kamere)
+DECL GLOBAL REAL OFFSET_Y = 930
+;Analogiczna odleglosc miedzy osiami Y
+DECL GLOBAL REAL OFFSET_X = 45
+;Rozdzielczosc kamery w pikselach
+DECL GLOBAL REAL ROZDZ_PIX_X = 1600
+DECL GLOBAL REAL ROZDZ_PIX_Y = 1200
+;Zmierzone max. odleglosci widziane przez kamere na tasmie
+;("Rozdzielczosc" kamery w mm)
+;DECL GLOBAL REAL ROZDZ_MM_X = 670
+DECL GLOBAL REAL ROZDZ_MM_Y = 480
+
+;Ustawienia dot. ruchu robota
+;Wysokosc (wzgledem "bazy wizyjnej"), na jaka ma dojechac wstepnie robot
+;przed obnizeniem do pobrania obiektu
+DECL GLOBAL REAL WYS_WYJSCIOWA = 100
+;Polozenie chwytaka w osi Z przy pobieraniu obiektu
+DECL GLOBAL REAL WYS_POBIERZ = 40
+;Polozenie chwytaka w osi Z przy odkladaniu obiektu
+DECL GLOBAL REAL WYS_ODLOZ = 50
+
+;Deklaracja punktow
+;Punkt poczatkowego polozenia chwytaka, czekajac na obiekty do pobrania
+DECL GLOBAL FRAME PUNKT_POCZ = {X 120.0,Y 350.0,Z -100,A 90.0,B 0.0,C 0.0}
+;Punkt odkladania obiektow przed obnizeniem
+DECL GLOBAL FRAME PUNKT_ODLOZ = {X 125.0,Y 90.0, Z -100,A 90.0, B 0.0, C 0.0}
+
+ENDDAT
