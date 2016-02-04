@@ -1,0 +1,14 @@
+&ACCESS RVP
+&REL 9
+&PARAM TEMPLATE = C:\KRC\Roboter\Template\ExpertVorgabe
+&PARAM EDITMASK = *
+DEF ZAMKN_CHWYTAK( )
+
+$OUT[5] = TRUE
+PULSE($OUT[6],TRUE,0.9)
+$OUT[7] = TRUE
+
+;Koniec programu dopiero po zamknieciu
+WAIT FOR $OUT[6] == FALSE
+
+END

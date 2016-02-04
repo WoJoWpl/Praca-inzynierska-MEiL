@@ -52,7 +52,7 @@ DECL GLOBAL REAL FRQ_MAX = 50
 DECL GLOBAL REAL PRZELOZENIE = 15
 
 ;Punkt dla pierwszego ruchu BCO
-DECL GLOBAL E6AXIS PUNKT_DOM = {A1 -120.0,A2 120.0, A3 -45.0, A4 0.0, A5 90.0,A6 0.0,E1 0.0,E2 0.0, E3 0.0,E4 0.0,E5 0.0,E6 0.0}
+DECL GLOBAL E6AXIS PUNKT_DOM = {A1 140.0,A2 120.0, A3 -75.0, A4 0.0, A5 80.0,A6 0.0,E1 0.0,E2 0.0, E3 0.0,E4 0.0,E5 0.0,E6 0.0}
 ;Punkt "zerowy" - wzor do wpisania odczytanego polozenia obiektu
 DECL GLOBAL FRAME PUNKT_ZERO = {X 0.0,Y 0.0,Z 0.0,A 90.0,B 0.0,C 0.0}
 ;Tymczasowa skladowa Z do ruchu LIN w glownym programie

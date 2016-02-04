@@ -1,0 +1,16 @@
+&ACCESS RVO1
+&COMMENT 
+DEF WL_TIMER (CZY_WLACZYC :IN)
+
+INT I
+
+;Argument okresla, czy TIMERy maja byc wlaczone (TRUE), czy nie (FALSE)
+BOOL CZY_WLACZYC
+
+FOR I=1 TO 10
+  IF PUNKT_REF[I].X<>0 THEN
+    $TIMER_STOP[I]=NOT CZY_WLACZYC
+  ENDIF
+ENDFOR
+
+END

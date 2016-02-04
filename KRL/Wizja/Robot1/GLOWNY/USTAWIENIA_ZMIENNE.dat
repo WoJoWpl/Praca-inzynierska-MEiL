@@ -3,7 +3,7 @@
 DEFDAT USTAWIENIA_ZMIENNE PUBLIC
 
 ;Definiowana odleglosc do przebycia przez obiekt
-DECL GLOBAL REAL DROGA_OBIEKTU = 900
+DECL GLOBAL REAL DROGA_OBIEKTU = 800
 
 ;Ustawienia falownika (musza byc zgodne z ust. na panelu falownika)
 DECL GLOBAL REAL JOG = 15
@@ -14,9 +14,9 @@ DECL GLOBAL REAL ST3 = 50
 ;Ustawienia dot. systemu wizyjnego
 ;Odleglosc osi X ukladu wspolrzednych ("bazy wizyjnej") od osi X systemu wizyjnego
 ;(gorna krawedz obrazu widzianego przez kamere)
-DECL GLOBAL REAL OFFSET_Y = 930
+DECL GLOBAL REAL OFFSET_Y = 990
 ;Analogiczna odleglosc miedzy osiami Y
-DECL GLOBAL REAL OFFSET_X = 45
+DECL GLOBAL REAL OFFSET_X = 28
 ;Rozdzielczosc kamery w pikselach
 DECL GLOBAL REAL ROZDZ_PIX_X = 1600
 DECL GLOBAL REAL ROZDZ_PIX_Y = 1200
@@ -38,6 +38,6 @@ DECL GLOBAL REAL WYS_ODLOZ = 50
 ;Punkt poczatkowego polozenia chwytaka, czekajac na obiekty do pobrania
 DECL GLOBAL FRAME PUNKT_POCZ = {X 120.0,Y 350.0,Z -100.0,A 90.0,B 0.0,C 0.0}
 ;Punkt odkladania obiektow przed obnizeniem
-DECL GLOBAL FRAME PUNKT_ODLOZ = {X 400.0,Y 350.0, Z -100.0,A 90.0, B 0.0, C 0.0}
+DECL GLOBAL FRAME PUNKT_ODLOZ = {X 400.0,Y 300.0, Z -100.0,A 90.0, B 0.0, C 0.0}
 
 ENDDAT
